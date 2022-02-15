@@ -1,0 +1,24 @@
+{
+  "name": "API",
+  "version": "2.0.0",
+  "main": "app.ts",
+  "repository": "https://github.com/gusscamargo/Desafio-FullStack-GazinTech2",
+  "author": "Gustavo Michels de Camargo",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules ./app.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/restify": "^8.5.4",
+    "dotenv": "^16.0.0",
+    "mysql2": "^2.3.3",
+    "restify": "^8.6.1",
+    "restify-cors-middleware2": "^2.1.2",
+    "restify-router": "^0.6.2",
+    "sequelize": "^6.16.1",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.5"
+  }
+}
