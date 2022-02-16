@@ -20,13 +20,13 @@ app.use(restify.plugins.queryParser());
 app.use(restify.plugins.bodyParser({ mapParams: true }));
 
 // Middlesware
-import cors from "./middleware/cors"
+import cors from "./src/middleware/cors"
 
 app.pre(cors.preflight)
 app.use(cors.actual)
 
 // Routes
-import Nivel from "./routes/nivel"
+import Nivel from "./src/routes/nivel"
 // import Desenvolvedor from "./routes/desenvolvedor"
 
 Nivel.applyRoutes(app, "/nivel")

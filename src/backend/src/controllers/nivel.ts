@@ -1,7 +1,7 @@
 import sequelize from "sequelize"
 import type { Request, Response } from "restify"
-import type { Controller } from "../types/controller"
-import type { Nivel as NivelType } from "../types"
+import type { Controller } from "../../types/controller"
+import type { Nivel as NivelType } from "../../types"
 
 import NivelModel from "../models/nivel"
 import DesenvolvedorModel from "../models/desenvolvedor"

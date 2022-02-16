@@ -1,6 +1,6 @@
 import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from "sequelize"
 import connection from "../config/database"
-import type { DesenvolvedorAttributes } from "../types"
+import type { DesenvolvedorAttributes } from "../../types"
 import Nivel from "./nivel"
 
 class Desenvolvedor extends Model<InferAttributes<Desenvolvedor>, InferCreationAttributes<Desenvolvedor>> implements DesenvolvedorAttributes{

@@ -1,6 +1,6 @@
 import { Model, DataTypes } from "sequelize"
 import connection from "../config/database"
-import type { NivelAttributes } from "../types"
+import type { NivelAttributes } from "../../types"
 
 
 class Nivel extends Model<NivelAttributes> {
