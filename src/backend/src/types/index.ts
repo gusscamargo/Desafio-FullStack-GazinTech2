@@ -20,7 +20,8 @@ export interface Desenvolvedor {
 
 export interface DesenvolvedorAttributes extends Desenvolvedor{ 
     id: number
-    Nivel: NivelAttributes
 }
 
-export type DesenvolvedorResponse = DesenvolvedorAttributes
+export interface DesenvolvedorResponse extends DesenvolvedorAttributes {
+    Nivel: NivelAttributes
+}
