@@ -17,6 +17,7 @@
     "@types/validator": "^13.7.1",
     "dotenv": "^16.0.0",
     "mysql2": "^2.3.3",
+    "path": "^0.12.7",
     "restify": "^8.6.1",
     "restify-cors-middleware2": "^2.1.2",
     "restify-router": "^0.6.2",
