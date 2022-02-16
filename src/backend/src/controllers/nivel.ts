@@ -61,9 +61,9 @@ class Nivel implements Controller{
                         ]
                     ]
                 }
-            })
+            }) || {}
 
-            res.send(200, nivel === null ? [] : nivel)
+            res.send(200, nivel)
         } catch (err: any) {
             res.send(400, {
                 message: err.name
