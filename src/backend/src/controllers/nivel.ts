@@ -49,7 +49,14 @@ class Nivel implements Controller{
     }
 
     public async getOne(req: Request, res: Response): Promise<void> {
-        const { id } = await req.params
+        const id = await parseInt(req.params.id)
+
+        if (id < 1) {
+            res.send(400, { message: "Invalid ID" })
+
+            return
+        }
+
         try {
             const nivel = await NivelModel.findByPk(id, {
                 attributes: {
@@ -82,10 +89,18 @@ class Nivel implements Controller{
 
         try {
             const nivel: any = await NivelModel.findByPk(data.id)
-            nivel.set(data)
-            nivel.save()
 
-            res.send(200, nivel)
+            if(!nivel){
+                res.send(400, {message: "Invalid ID"})
+
+                return
+            }
+
+                nivel.set(data)
+                nivel.save()
+
+                res.send(200, nivel)
+                        
 
         } catch (err: any) {
             res.send(400, {
@@ -95,12 +110,18 @@ class Nivel implements Controller{
     }
 
     public async delete(req: Request, res: Response): Promise<void>{
-        const {id} = await req.body
+        const id = await parseInt(req.body.id)
+
+        if(id < 1){
+            res.send(400, { message: "Invalid ID" })
+
+            return
+        }
 
         try {
             const { count } = await DesenvolvedorModel.findAndCountAll({
                 where: {
-                    nivel_id: parseInt(id)
+                    nivel_id: id
                 }
             })
 

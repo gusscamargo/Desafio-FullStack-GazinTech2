@@ -9,12 +9,13 @@ const input: Nivel = {
     nivel: "Programador"
 }
 
-const ipInvalido: any = {
-    id: -1
+const ipInvalido: NivelAttributes = {
+    id: -1,
+    nivel: "Teste"
 }
 
 describe("GET /nivel/", () => {
-    it("Receber lista de itens", done => {
+    it("Receber lista de itens e validar cada item", done => {
         request(endereco)
             .get(`/${model}/`)
             .set('Accept', 'application/json')
@@ -189,6 +190,15 @@ describe("PUT /nivel/edit", () => {
                         return done()
                     })                
             })        
+    })
+
+    it("Editar Item com id Invalido",  done => {
+        request(endereco)
+            .put(`/${model}/edit`)
+            .send(ipInvalido)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(400, done)
     })
 })
 
