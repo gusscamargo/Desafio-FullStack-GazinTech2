@@ -8,7 +8,12 @@
   "scripts": {
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules ./app.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "db_crete": "sequelize-cli db:create",
+    "db_migrate": "sequelize-cli db:migrate",
+    "db_install": "sequelize-cli db:create && sequelize-cli db:migrate",
+    "db_remove": "sequelize-cli db:drop",
+    "db_reset": "sequelize-cli db:drop && sequelize-cli db:create && sequelize-cli db:migrate"
   },
   "dependencies": {
     "dotenv": "^16.0.0",
