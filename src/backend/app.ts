@@ -1,6 +1,7 @@
 import restify from "restify"
 import { config } from "dotenv"
 
+
 // Tornar as variaveis de .env "globais"
 config()
 
@@ -19,8 +20,17 @@ app.use(restify.plugins.queryParser());
 app.use(restify.plugins.bodyParser({ mapParams: true }));
 
 // Middlesware
+import cors from "./middleware/cors"
+
+app.pre(cors.preflight)
+app.use(cors.actual)
 
 // Routes
+import Nivel from "./routes/nivel"
+import Desenvolvedor from "./routes/desenvolvedor"
+
+Nivel.applyRoutes(app, "/nivel")
+Desenvolvedor.applyRoutes(app, "/desenvolvedor")
 
 // Executando servidor
 app.listen(port, () => console.log("SERVER ON"))
