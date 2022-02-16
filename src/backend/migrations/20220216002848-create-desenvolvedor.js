@@ -25,22 +25,12 @@ module.exports = {
           allowNull: true
       },
       datanascimento: {
-          type: DataTypes.DATEONLY,
+          type: DataTypes.DATE,
           allowNull: false,
           validate: {
               notNull: true,
               notEmpty: true,
               isDate: true
-          }
-      },
-      idade: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          validate: {
-              notNull: true,
-              notEmpty: true,
-              isNumeric: true,
-              isInt: true
           }
       },
       hobby: {
