@@ -1,6 +1,30 @@
 version: '3.8'
 
 services:
+  backend:
+    build:
+      context: ./
+      dockerfile: ./build/backend.Dockerfile
+    restart: always
+    networks:
+      - rede
+    ports:
+      - ${BACKEND}:4000
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./
+      dockerfile: ./build/backend.Dockerfile
+    restart: always
+    networks:
+      - rede
+    ports:
+      - ${FRONTEND}:3000
+    depends_on:
+      - backend
+
   db:
     image: mysql:5.7.35
     restart: always
