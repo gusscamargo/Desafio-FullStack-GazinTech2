@@ -1,17 +1,33 @@
 import request from "supertest"
+import { isModuleBlock } from "typescript"
 import type { Nivel, NivelResponse, NivelAttributes} from "../src/types/index"
 
-const endereco = "http://127.0.0.1:4000"
+const endereco: string = "http://127.0.0.1:4000"
+const model: string = "nivel"
+const camposObrigatorios: string[] = ["nivel"]
+const input: Nivel = {
+    nivel: "Programador"
+}
+
+const ipInvalido: any = {
+    id: -1
+}
 
 describe("GET /nivel/", () => {
-    it("Resposta com um array de json", done => {
+    it("Receber lista de itens", done => {
         request(endereco)
-            .get("/nivel/")
+            .get(`/${model}/`)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)
             .then((response: any) => {
                 expect(Array.isArray(response._body)).toEqual(true)
+
+                response._body.forEach((item: NivelResponse) => {
+                    expect(item).toHaveProperty("id")
+                    expect(item).toHaveProperty("nivel")
+                })
+
 
                 return done()
             })
@@ -19,13 +35,13 @@ describe("GET /nivel/", () => {
 })
 
 describe("POST /nivel/add", () => {
-    it("Resposta com o json da dado inscrito", done => {
-        const input: Nivel = {
-            nivel: "Programador"
-        }
+    const caminho: string = `/${model}/add`
+
+    it("Adicionar item", done => {  
+        
 
         request(endereco)
-            .post("/nivel/add")
+            .post(caminho)
             .send(input)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
@@ -37,18 +53,52 @@ describe("POST /nivel/add", () => {
                 return done()
             })
     })
-})
 
-describe("GET /nivel/:id", () => {
-    it("Resposta dom o json do id pesquisado", done => {
+    it("Adicionar lista de itens", done => {
         const input: Nivel = {
             nivel: "Programador"
         }
 
+        const lista: Nivel[] = [
+            input, 
+            input, 
+            input, 
+            input, 
+            input, 
+            input, 
+            input 
+        ]
+
+        request(endereco)
+            .post(caminho)
+            .send(lista)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(400, done)
+    })
+
+    it("Adicionar item sem campo obrigatorio nivel", done => {
+        const item: any = {}
+
+        request(endereco)
+            .post(caminho)
+            .send(item)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(400, done)
+    })
+})
+
+describe("GET /nivel/:id", () => {
+    const caminhoAdd: string = `/${model}/add`
+
+
+    it("Adicionar item e pesquisar esse mesmo item", done => {
+
 
         // Testar com valor adicionado
         request(endereco)
-            .post("/nivel/add")
+            .post(caminhoAdd)
             .send(input)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
@@ -60,7 +110,7 @@ describe("GET /nivel/:id", () => {
                 }
 
                 request(endereco)
-                    .get(`/nivel/${item.id}`)
+                    .get(`/${model}/${item.id}`)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
                     .expect(200)
@@ -70,45 +120,52 @@ describe("GET /nivel/:id", () => {
                         expect(response._body).toHaveProperty("numeroDevs")
 
 
-                        // Por ultimo testar com cada valor do banco
-                        request(endereco)
-                            .get("/nivel/")
-                            .set('Accept', 'application/json')
-                            .expect('Content-Type', /json/)
-                            .expect(200)
-                            .then((response: any) => {
-                                const data: NivelResponse[] = response._body
-
-                                for (let item of data) {
-                                    request(endereco)
-                                        .get(`/nivel/${item.id}`)
-                                        .set('Accept', 'application/json')
-                                        .expect('Content-Type', /json/)
-                                        .expect(200)
-                                        .then((response: any) => {
-                                            expect(response._body.id).toEqual(item.id)
-                                            expect(response._body.nivel).toEqual(item.nivel)
-                                            expect(response._body).toHaveProperty("numeroDevs")
-                                        })
-                                }
-
-                                return done()
-                            })
-
+                        return done()
                     })
             })        
+    })
+
+    it("Pesquisar individualmente com cada termo do getAll", done => {
+        // Por ultimo testar com cada valor do banco
+        request(endereco)
+            .get(`/${model}/`)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .then((response: any) => {
+                const data: NivelResponse[] = response._body
+
+                data.forEach(item => {
+                    request(endereco)
+                        .get(`/${model}/${item.id}`)
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', /json/)
+                        .expect(200)
+                        .then((response: any) => {
+                            expect(response._body).toHaveProperty("id", item.id)
+                            expect(response._body).toHaveProperty("nivel", item.nivel)
+                            expect(response._body).toHaveProperty("numeroDevs")
+                        })
+                })
+
+                return done()
+            })
+    })
+
+    it("Pesquisar com id invalido", done => {
+        request(endereco)
+            .get(`/${model}/${-1}`)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(400, done)
     })
 })
 
 describe("PUT /nivel/edit", () => {
-    it("Resposta com json dos dados modificados", done => {
-        const input: Nivel = {
-            nivel: "Programador"
-        }
-
+    it("Adicionar item e editar esse mesmo item", done => {
 
         request(endereco)
-            .post("/nivel/add")
+            .post(`/${model}/add`)
             .send(input)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
@@ -120,7 +177,7 @@ describe("PUT /nivel/edit", () => {
                 }
 
                 request(endereco)
-                    .put("/nivel/edit")
+                    .put(`/${model}/edit`)
                     .send(edit)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
@@ -136,42 +193,42 @@ describe("PUT /nivel/edit", () => {
 })
 
 describe("DELETE /nivel/delete", () => {
-    it("Resposta com nada e espera valor de status 204", done => {
-        const input: Nivel = {
-            nivel: "Programador"
-        }
+    it("Adicionar item e deleter esse mesmo item", done => {
 
         request(endereco)
-            .post("/nivel/add")
+            .post(`/${model}/add`)
             .send(input)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(201)
             .then((response: any) => {
-                const del: NivelResponse = {
+                const res: NivelResponse = {
                     id: response._body.id,
                     nivel: response._body.nivel,
                     numeroDevs: response._body.numeroDevs
                 }
 
                 request(endereco)
-                    .delete("/nivel/delete")
-                    .send(del)
+                    .delete(`/${model}/delete`)
+                    .send(res)
                     .set('Accept', 'application/json')
                     .expect(204)
                     .then((response: any) => {
                         request(endereco)
-                            .get(`/nivel/${del.id}`)
+                            .get(`/${model}/${res.id}`)
                             .set('Accept', 'application/json')
                             .expect('Content-Type', /json/)
-                            .expect(200)
-                            .then((response: any) => {
-                                expect(response._body).toEqual({})
-
-                                return done()
-                            })
+                            .expect(400, done)
                     })
             })
 
+    })
+
+    it("Tentar excluir por id invalido", done => {
+
+        request(endereco)
+            .delete(`/${model}/delete`)
+            .send(ipInvalido)
+            .expect(400, done)
     })
 })
