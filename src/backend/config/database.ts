@@ -6,7 +6,7 @@ export default new Sequelize(
     process.env.DB_PASSWORD || "root",
     {
         host: process.env.DB_HOST || "mysql",
-        port: parseInt(process.env.DB_PORT || "") || 3306,
+        port: parseInt(process.env.DB_PORT || "3306"),
         dialect: "mysql"
     }
 )
