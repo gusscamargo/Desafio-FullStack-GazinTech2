@@ -8,7 +8,6 @@ class Desenvolvedor extends Model<InferAttributes<Desenvolvedor>, InferCreationA
     declare nome: string
     declare sexo: CreationOptional<string>
     declare datanascimento: Date
-    declare idade: number
     declare hobby: CreationOptional<string>
     declare nivel_id: number
 }
@@ -33,23 +32,14 @@ Desenvolvedor.init({
         allowNull: true
     },
     datanascimento: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.DATE,
         allowNull: false,
         validate: {
             notNull: true,
             notEmpty: true,
             isDate: true
         },
-    },
-    idade: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            notNull: true,
-            notEmpty: true,
-            isNumeric: true,
-            isInt: true
-        }
+        
     },
     hobby: {
         type: DataTypes.TEXT,

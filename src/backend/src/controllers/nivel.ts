@@ -18,7 +18,7 @@ class Nivel implements Controller{
 
         } catch (err: any) {
             res.send(400, {
-                message: err.name
+                message: err.errors
             })
         }
     }
@@ -39,10 +39,11 @@ class Nivel implements Controller{
                 }
             })
 
+            
             res.send(200, niveis)
         } catch (err: any) {
             res.send(400, {
-                message: err.name
+                message: err.errors
             })
         }
     }
@@ -61,12 +62,17 @@ class Nivel implements Controller{
                         ]
                     ]
                 }
-            }) || {}
+            }) || null
 
-            res.send(200, nivel)
+            if(nivel === null){
+                res.send(400, {message: "Invalid ID"})
+            }else{
+                res.send(200, nivel)
+            }
+            
         } catch (err: any) {
             res.send(400, {
-                message: err.name
+                message: err.errors
             })
         }
     }
@@ -83,7 +89,7 @@ class Nivel implements Controller{
 
         } catch (err: any) {
             res.send(400, {
-                message: err.name
+                message: err.errors
             })
         }
     }
@@ -106,13 +112,20 @@ class Nivel implements Controller{
 
             // Evitar tentar excluir niveis que não existem
             const nivel = await NivelModel.findByPk(id)
-            if (nivel) await nivel.destroy()
 
-            res.send(204)
+
+            if (nivel){
+                await nivel.destroy()
+                res.send(204)
+            }else{
+                res.send(400, {message: "Invalid ID"})
+            }
+
+            
 
         } catch (err: any) {
             res.send(400, {
-                message: err
+                message: err.errors[0]
             })
         }
     }
