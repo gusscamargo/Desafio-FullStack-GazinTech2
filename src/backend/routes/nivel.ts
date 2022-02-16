@@ -1,14 +1,17 @@
 import { Router } from "restify-router"
+import Nivel from "../controllers/nivel"
+
 const router = new Router()
 
-router.get("/")
 
-router.get("/:id")
+router.get("/", Nivel.getAll)
 
-router.post("/add")
+router.get("/:id", Nivel.getOne)
 
-router.put("/edit")
+router.post("/add", Nivel.add)
 
-router.del("/delete")
+router.put("/edit", Nivel.edit)
+
+router.del("/delete", Nivel.delete)
 
 export default router

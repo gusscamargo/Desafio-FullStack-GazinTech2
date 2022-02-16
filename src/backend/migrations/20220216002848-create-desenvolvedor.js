@@ -46,7 +46,10 @@ module.exports = {
       hobby: {
           type: DataTypes.TEXT,
           allowNull: true
-      }
+      },
+      nivel_id: {
+        type: DataTypes.INTEGER.UNSIGNED
+    }
     })
   },
 

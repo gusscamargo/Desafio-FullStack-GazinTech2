@@ -21,12 +21,14 @@ Nivel.init({
                 notNull: true,
                 notEmpty: true
             }
-        }
+        },
+        
     },
     {
         modelName: "Nivel",
         tableName: "nivel",
-        sequelize: connection
+        sequelize: connection,
+        timestamps: false
     }
 )
 
