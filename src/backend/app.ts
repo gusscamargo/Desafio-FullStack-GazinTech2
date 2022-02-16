@@ -33,4 +33,4 @@ Nivel.applyRoutes(app, "/nivel")
 // Desenvolvedor.applyRoutes(app, "/desenvolvedor")
 
 // Executando servidor
-app.listen(port, () => console.log("SERVER ON"))
+app.listen(port, () => console.log("BACKEND ON"))
