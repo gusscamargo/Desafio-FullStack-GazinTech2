@@ -160,6 +160,22 @@ describe("GET /nivel/:id", () => {
             .expect('Content-Type', /json/)
             .expect(400, done)
     })
+
+    it("Pesquisar com id sendo uma string", done => {
+        request(endereco)
+            .get(`/${model}/string`)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(400, done)
+    })
+
+    it("Pesquisar com id sendo um caractere", done => {
+        request(endereco)
+            .get(`/${model}/a`)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(400, done)
+    })
 })
 
 describe("PUT /nivel/edit", () => {
