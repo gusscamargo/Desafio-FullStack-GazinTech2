@@ -51,7 +51,7 @@ class Nivel implements Controller{
     public async getOne(req: Request, res: Response): Promise<void> {
         const id = await parseInt(req.params.id)
 
-        if (id < 1) {
+        if (id < 1 || isNaN(id)) {
             res.send(400, { message: "Invalid ID" })
 
             return
