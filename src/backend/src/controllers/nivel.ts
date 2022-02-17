@@ -1,12 +1,12 @@
 import sequelize from "sequelize"
 import type { Request, Response } from "restify"
-import type { Controller } from "../types/controller"
+import type { NivelController } from "../types/controllers"
 import type { Nivel as NivelType } from "../types"
 
 import NivelModel from "../models/nivel"
 import DesenvolvedorModel from "../models/desenvolvedor"
 
-class Nivel implements Controller{
+class Nivel implements NivelController{
 
     public async add(req: Request, res: Response): Promise<void> {
         const data: NivelType = await req.body
