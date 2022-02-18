@@ -7,7 +7,7 @@ const camposObrigatorios: string[] = ["id", "nome", "datanascimento", "nivel_id"
 const input: Desenvolvedor = {
     nome: "Gustavo",
     datanascimento: new Date("1998-05-18"),
-    nivel_id: 131,
+    nivel_id: 3,
     hobby: "Ler, jogar e estudar mais sobre tecnologia",
     sexo: "M"
 }
@@ -96,6 +96,18 @@ describe("POST /desenvolvedor/add", () => {
             .expect('Content-Type', /json/)
             .expect(400, done)
     })
+
+    it("Adicionar item relacionado a uma ID de Nivel que não existe", done => {
+        const inputAux: Desenvolvedor = input
+        input.nivel_id = 500000
+
+        request(endereco)
+            .post(caminho)
+            .send(inputAux)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(400, done)
+    })
 })
 
 describe("GET /desenvolvedor/:id", () => {
@@ -104,11 +116,18 @@ describe("GET /desenvolvedor/:id", () => {
 
     it("Adicionar item e pesquisar esse mesmo item", done => {
 
+        const devTest: Desenvolvedor = {
+            datanascimento: new Date("1998-05-18"),
+            nivel_id: 3,
+            nome: "Gustavo Michels de Camargo",
+            hobby: "Ler",
+            sexo: "M"
+        }
 
         // Testar com valor adicionado
         request(endereco)
             .post(caminhoAdd)
-            .send(input)
+            .send(devTest)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(201)
@@ -190,14 +209,24 @@ describe("GET /desenvolvedor/:id", () => {
 describe("PUT /desenvolvedor/edit", () => {
     it("Adicionar item e editar esse mesmo item", done => {
 
+        const devTest: Desenvolvedor = {
+            datanascimento: new Date("1998-05-18"),
+            nivel_id: 3,
+            nome: "Gustavo Michels de Camargo",
+            hobby: "Ler",
+            sexo: "M"
+        }
+
+
         request(endereco)
             .post(`/${model}/add`)
-            .send(input)
+            .send(devTest)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(201)
             .then((response: any) => {
-                const edit: DesenvolvedorResponse = response._body
+                const edit = response._body
+                console.log(edit)
                 edit.nome = "Gustavo 2 Gustavo"
 
                 request(endereco)
@@ -212,8 +241,7 @@ describe("PUT /desenvolvedor/edit", () => {
                         expect(response._body).toHaveProperty("nome")
                         expect(response._body).toHaveProperty("datanascimento")
                         expect(response._body).toHaveProperty("nivel_id")
-                        expect(response._body).toHaveProperty("Nivel")
-
+1
                         return done()
                     })
             })
@@ -232,14 +260,22 @@ describe("PUT /desenvolvedor/edit", () => {
 describe("DELETE /desenvolvedor/delete", () => {
     it("Adicionar item e deleter esse mesmo item", done => {
 
+        const devTest: Desenvolvedor = {
+            datanascimento: new Date("1998-05-18"),
+            nivel_id: 3,
+            nome: "Gustavo Michels de Camargo",
+            hobby: "Ler",
+            sexo: "M"
+        }
+
         request(endereco)
             .post(`/${model}/add`)
-            .send(input)
+            .send(devTest)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(201)
             .then((response: any) => {
-                const res: DesenvolvedorResponse = response
+                const res: DesenvolvedorResponse = response._body
 
                 request(endereco)
                     .delete(`/${model}/delete`)
