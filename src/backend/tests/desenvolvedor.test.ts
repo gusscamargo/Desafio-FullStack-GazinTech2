@@ -226,7 +226,7 @@ describe("PUT /desenvolvedor/edit", () => {
             .expect(201)
             .then((response: any) => {
                 const edit = response._body
-                console.log(edit)
+                
                 edit.nome = "Gustavo 2 Gustavo"
 
                 request(endereco)
