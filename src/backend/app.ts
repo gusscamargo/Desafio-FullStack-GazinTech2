@@ -27,10 +27,10 @@ app.use(cors.actual)
 
 // Routes
 import Nivel from "./src/routes/nivel"
-// import Desenvolvedor from "./routes/desenvolvedor"
+import Desenvolvedor from "./src/routes/desenvolvedor"
 
 Nivel.applyRoutes(app, "/nivel")
-// Desenvolvedor.applyRoutes(app, "/desenvolvedor")
+Desenvolvedor.applyRoutes(app, "/desenvolvedor")
 
 // Executando servidor
 app.listen(port, () => console.log("BACKEND ON"))
