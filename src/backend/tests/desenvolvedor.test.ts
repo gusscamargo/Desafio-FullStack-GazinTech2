@@ -1,16 +1,22 @@
 import request from "supertest"
-import type { Nivel, NivelResponse, NivelAttributes} from "../src/types/index"
+import type { Desenvolvedor, DesenvolvedorAttributes, DesenvolvedorResponse } from "../src/types/index"
 
 const endereco: string = "http://127.0.0.1:4000"
-const model: string = "nivel"
-const camposObrigatorios: string[] = ["nivel"]
-const input: Nivel = {
-    nivel: "Programador"
+const model: string = "desenvolvedor"
+const camposObrigatorios: string[] = ["nome", "datanascimento", "nivel_id"]
+const input: Desenvolvedor = {
+    nome: "Gustavo",
+    datanascimento: new Date("1998-05-18"),
+    nivel_id: 131,
+    hobby: "Ler, jogar e estudar mais sobre tecnologia",
+    sexo: "M"
 }
 
-const ipInvalido: NivelAttributes = {
+const ipInvalido: DesenvolvedorAttributes = {
     id: -1,
-    nivel: "Teste"
+    nome: "Gustavo",
+    datanascimento: new Date("1998-05-18"),
+    nivel_id: 131
 }
 
 describe("GET /nivel/", () => {
@@ -23,7 +29,7 @@ describe("GET /nivel/", () => {
             .then((response: any) => {
                 expect(Array.isArray(response._body)).toEqual(true)
 
-                response._body.forEach((item: NivelResponse) => {
+                response._body.forEach((item: DesenvolvedorResponse) => {
                     expect(item).toHaveProperty("id")
                     expect(item).toHaveProperty("nivel")
                 })
@@ -37,8 +43,8 @@ describe("GET /nivel/", () => {
 describe("POST /nivel/add", () => {
     const caminho: string = `/${model}/add`
 
-    it("Adicionar item", done => {  
-        
+    it("Adicionar item", done => {
+
 
         request(endereco)
             .post(caminho)
@@ -47,26 +53,24 @@ describe("POST /nivel/add", () => {
             .expect('Content-Type', /json/)
             .expect(201)
             .then((response: any) => {
-                expect(response._body).toHaveProperty("id")
-                expect(response._body).toHaveProperty("nivel", input.nivel)
+                camposObrigatorios.forEach(item => {
+                    expect(response._body).toHaveProperty("item", eval(`input.${item}`))
+                })
 
                 return done()
             })
     })
 
     it("Adicionar lista de itens", done => {
-        const input: Nivel = {
-            nivel: "Programador"
-        }
 
-        const lista: Nivel[] = [
-            input, 
-            input, 
-            input, 
-            input, 
-            input, 
-            input, 
-            input 
+        const lista: Desenvolvedor[] = [
+            input,
+            input,
+            input,
+            input,
+            input,
+            input,
+            input
         ]
 
         request(endereco)
@@ -104,10 +108,7 @@ describe("GET /nivel/:id", () => {
             .expect('Content-Type', /json/)
             .expect(201)
             .then((response: any) => {
-                const item: NivelAttributes = {
-                    id: response._body.id,
-                    nivel: response._body.nivel
-                }
+                const item: DesenvolvedorAttributes = response
 
                 request(endereco)
                     .get(`/${model}/${item.id}`)
@@ -115,14 +116,14 @@ describe("GET /nivel/:id", () => {
                     .expect('Content-Type', /json/)
                     .expect(200)
                     .then((response: any) => {
-                        expect(response._body.id).toEqual(item.id)
-                        expect(response._body.nivel).toEqual(item.nivel)
-                        expect(response._body).toHaveProperty("numeroDevs")
-
+                        expect(response._body).toHaveProperty("id")
+                        camposObrigatorios.forEach(e => {
+                            expect(response._body).toHaveProperty(`${e}`, eval(`item.${item}`))
+                        })
 
                         return done()
                     })
-            })        
+            })
     })
 
     it("Pesquisar individualmente com cada termo do getAll", done => {
@@ -133,7 +134,7 @@ describe("GET /nivel/:id", () => {
             .expect('Content-Type', /json/)
             .expect(200)
             .then((response: any) => {
-                const data: NivelResponse[] = response._body
+                const data: DesenvolvedorResponse[] = response._body
 
                 data.forEach(item => {
                     request(endereco)
@@ -142,9 +143,11 @@ describe("GET /nivel/:id", () => {
                         .expect('Content-Type', /json/)
                         .expect(200)
                         .then((response: any) => {
-                            expect(response._body).toHaveProperty("id", item.id)
-                            expect(response._body).toHaveProperty("nivel", item.nivel)
-                            expect(response._body).toHaveProperty("numeroDevs")
+                        
+                            expect(response._body).toHaveProperty("id")
+                            camposObrigatorios.forEach(e => {
+                                expect(response._body).toHaveProperty(`${e}`, eval(`item.${e}`))
+                            })
                         })
                 })
 
@@ -187,10 +190,8 @@ describe("PUT /nivel/edit", () => {
             .expect('Content-Type', /json/)
             .expect(201)
             .then((response: any) => {
-                const edit: NivelAttributes = {
-                    id: response._body.id,
-                    nivel: "Programador-não"
-                }
+                const edit: DesenvolvedorResponse = response
+                edit.nome = "Gustavo 2 Gustavo"
 
                 request(endereco)
                     .put(`/${model}/edit`)
@@ -199,15 +200,18 @@ describe("PUT /nivel/edit", () => {
                     .expect('Content-Type', /json/)
                     .expect(200)
                     .then((response: any) => {
+
                         expect(response._body).toHaveProperty("id")
-                        expect(response._body).toHaveProperty("nivel", edit.nivel)
+                        camposObrigatorios.forEach(e => {
+                            expect(response._body).toHaveProperty(`${e}`, eval(`item.${e}`))
+                        })
 
                         return done()
-                    })                
-            })        
+                    })
+            })
     })
 
-    it("Editar Item com id Invalido",  done => {
+    it("Editar Item com id Invalido", done => {
         request(endereco)
             .put(`/${model}/edit`)
             .send(ipInvalido)
@@ -227,11 +231,7 @@ describe("DELETE /nivel/delete", () => {
             .expect('Content-Type', /json/)
             .expect(201)
             .then((response: any) => {
-                const res: NivelResponse = {
-                    id: response._body.id,
-                    nivel: response._body.nivel,
-                    numeroDevs: response._body.numeroDevs
-                }
+                const res: DesenvolvedorResponse = response
 
                 request(endereco)
                     .delete(`/${model}/delete`)
