@@ -119,7 +119,7 @@ class Nivel implements NivelController{
         }
 
         try {
-            const { count } = await DesenvolvedorModel.findAndCountAll({
+            const count: number = await DesenvolvedorModel.count({
                 where: {
                     nivel_id: id
                 }
