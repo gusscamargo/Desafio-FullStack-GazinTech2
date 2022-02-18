@@ -1,14 +1,15 @@
 import { Router } from "restify-router";
+import Desenvolvedor from "../controllers/desenvolvedor";
 const router = new Router()
 
-router.get("/")
+router.get("/", Desenvolvedor.getAll)
 
-router.get("/:id")
+router.get("/:id", Desenvolvedor.getOne)
 
-router.post("/add")
+router.post("/add", Desenvolvedor.add)
 
-router.put("/edit")
+router.put("/edit", Desenvolvedor.edit)
 
-router.del("/delete")
+router.del("/delete", Desenvolvedor.delete)
 
 export default router
